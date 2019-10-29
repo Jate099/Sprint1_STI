@@ -1,21 +1,3 @@
-/*const CSVToJSON = require("csvtojson");
-const JSONToCSV = require("json2csv").parse;
-const FileSystem = require("fs");
-
-CSVToJSON().fromFile("./source.csv").then(source =>{
-    console.log(source);
-    source.push({
-             "sku": "123123",
-             "title": "zelda",
-             "hardware": "my shop",
-             "price": "50",
-        });
-
-        const csv = JSONToCSV(source, {fields: ["sku","title","hardware","price"]});
-        FileSystem.writeFileSync("./destination.csv", csv);
-
-});*/
-
 var body = document.querySelector("body");
 var table = document.createElement("table");
 
