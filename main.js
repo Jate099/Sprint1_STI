@@ -21,9 +21,11 @@ var valB_3;
 var btnCalcular = document.querySelector('.calcular');
 var resultadoFin = document.querySelector('.porcentajeFin');
 
+var kNumber = document.querySelector('.kNumber');
+
 //cargar archivo
 $.ajax({
-    url: "/datos.csv",
+    url: "/dataBpizza.csv",
     dataType: "text"
 }).done(succesFunction);
 
@@ -37,149 +39,60 @@ function succesFunction(data) {
         //lectura de linea
         let lineData = rowData[index];
 
-        //creacion de fila
-        let row = document.createElement("tr");
-
         let listArray = lineData.split(";");
 
-        for (let i = 0; i < listArray.length; i++) {
-            //lectura de celda
-            let cellData = listArray[i];
-
-            let cell = document.createElement("td");
-            cell.innerHTML = cellData;
-            row.appendChild(cell);
-        }
-
-        table.appendChild(row);
-        info.push({ correo: listArray[0], participaciones: listArray[1], A: listArray[2], B: listArray[3] });
+        //info.push({ correo: listArray[0], participaciones: listArray[1], A: listArray[2], B: listArray[3] });
+        info.push(listArray);
 
     }
     console.log(info);
-
-
-    function sortByParticipationAs() {
-        info.sort(function (objA, objB) {
-
-            if (objA.participaciones < objB.participaciones) {
-                return -1;
-            }
-            if (objA.participaciones > objB.participaciones) {
-                return 1;
-            }
-
-            console.log("Participacion ordenado ascendente");
-            console.log(info);
-            //return objA.participaciones - objB.participaciones;
-        });
-    }
-    btnSort.addEventListener('click', sortByParticipationAs);
-
-    function sortByParticipationDes() {
-        info.sort(function (objA, objB) {
-
-            if (objA.participaciones < objB.participaciones) {
-                return 1;
-            }
-            if (objA.participaciones > objB.participaciones) {
-                return -1;
-            }
-
-            console.log("Participacion ordenado descendente");
-            console.log(info);
-        });
-    }
-    btnDesc.addEventListener('click', sortByParticipationDes);
-
-    //---------------------------------------------------------------------------------------------------
-    function sortByAAs() {
-        info.sort(function (objA, objB) {
-
-            if (objA.A < objB.A) {
-                return -1;
-            }
-            if (objA.A > objB.A) {
-                return 1;
-            }
-
-            console.log("A ordenado ascendente");
-            console.log(info);
-            //return objA.participaciones - objB.participaciones;
-        });
-    }
-    btnASort.addEventListener('click', sortByAAs);
-
-    function sortByADes() {
-        info.sort(function (objA, objB) {
-
-            if (objA.A < objB.A) {
-                return 1;
-            }
-            if (objA.A > objB.A) {
-                return -1;
-            }
-
-            console.log("A ordenado descendente");
-            console.log(info);
-        });
-    }
-    btnADesc.addEventListener('click', sortByADes);
-
-    //-----------------------------------------------------------------------------------
-    function sortByBAs() {
-        info.sort(function (objA, objB) {
-
-            if (objA.B < objB.B) {
-                return -1;
-            }
-            if (objA.B > objB.B) {
-                return 1;
-            }
-
-            console.log("B ordenado ascendente");
-            console.log(info);
-            //return objA.participaciones - objB.participaciones;
-        });
-    }
-    btnBSort.addEventListener('click', sortByBAs);
-
-    function sortByBDes() {
-        info.sort(function (objA, objB) {
-
-            if (objA.B < objB.B) {
-                return 1;
-            }
-            if (objA.B > objB.B) {
-                return -1;
-            }
-
-            console.log("B ordenado descendente");
-            console.log(info);
-        });
-    }
-    btnBDesc.addEventListener('click', sortByBDes);
-
 
     //-------Sprint 2------------------------------------------------------------------------------------------------------------
 
     for (let i = 0; i < info.length; i++) {
 
-        var personas = info[i].correo;
+        var personas = info[i][0];
 
         var desplegable1 = document.querySelector(".select1");
-        var desplegable2 = document.querySelector(".select2");
+        //var desplegable2 = document.querySelector(".select2");
 
         var opciones1 = document.createElement("option");
-        var opciones2 = document.createElement("option");
+        //var opciones2 = document.createElement("option");
 
         opciones1.innerHTML = personas;
-        opciones2.innerHTML = personas;
+        //opciones2.innerHTML = personas;
 
-        opciones1.value = info[i].participaciones + ',' + info[i].A + ',' + info[i].B;
-        opciones2.value = info[i].participaciones + ',' + info[i].A + ',' + info[i].B;
+        //opciones1.value = info[i].participaciones + ',' + info[i].A + ',' + info[i].B;
+        //opciones2.value = info[i].participaciones + ',' + info[i].A + ',' + info[i].B;
+        opciones1.value = Object.values(info[i]);
 
         desplegable1.appendChild(opciones1);
-        desplegable2.appendChild(opciones2);
+        //desplegable2.appendChild(opciones2);
+
+    }
+
+    const knnPicker = () => {
+        a = desplegable1.selectedIndex;
+        b = desplegable1.options;
+        subjectA = b[a].value.split(',');
+
+        for (let i = 0; i < info.length; i++) {
+            subjectB = info[i];
+
+            var numerador = 0;
+            var denominadorA = 0;
+            var denominadorB = 0;
+
+            for(let i = 1; i < subjectA.length; i ++){
+                numerador += (parseInt(subjectA[i]) * parseInt(subjectB[i]));
+
+                denominadorA += (parseInt(subjectA[i]) * parseInt(subjectA[i]));
+
+                denominadorB += (parseInt(subjectB[i]) * parseInt(subjectB[i]));
+            }
+
+            //------------------------------------------------------------------------------
+        }
     }
 
     function getValuesA() {
@@ -194,7 +107,7 @@ function succesFunction(data) {
     desplegable1.addEventListener('change', getValuesA);
 
 
-    function getValuesB() {
+    /*function getValuesB() {
         var persona2 = desplegable2.value.split(',');
 
         valB_1 = persona2[0];
@@ -203,24 +116,24 @@ function succesFunction(data) {
 
         console.log('Persona2' + " " + valB_1, valB_2, valB_3);
     }
-    desplegable2.addEventListener('change', getValuesB);
+    desplegable2.addEventListener('change', getValuesB);*/
 
-    
+
     function calcularSimilitud() {
         //producto punto
-        var AB = (valA_1*valB_1) + (valA_2*valB_2) + (valA_3*valB_3);
+        var AB = (valA_1 * valB_1) + (valA_2 * valB_2) + (valA_3 * valB_3);
 
         //magnitud
-        var magnitudA = Math.sqrt(Math.pow(valA_1,2) + Math.pow(valA_2,2) + Math.pow(valA_3,2));
-        var magnitudB = Math.sqrt(Math.pow(valB_1,2) + Math.pow(valB_2,2) + Math.pow(valB_3,2));
+        var magnitudA = Math.sqrt(Math.pow(valA_1, 2) + Math.pow(valA_2, 2) + Math.pow(valA_3, 2));
+        var magnitudB = Math.sqrt(Math.pow(valB_1, 2) + Math.pow(valB_2, 2) + Math.pow(valB_3, 2));
 
-        var multMagnAB = magnitudA*magnitudB;
+        var multMagnAB = magnitudA * magnitudB;
 
         //similitud coseno
-        var similitud = AB/multMagnAB
+        var similitud = AB / multMagnAB
 
         //Porcentaje final
-        var procentajeFinal = parseInt(similitud*100);
+        var procentajeFinal = parseInt(similitud * 100);
 
         resultadoFin.innerHTML = `<strong>Similitud:</strong>` + " " + procentajeFinal + "%";
 
@@ -230,8 +143,6 @@ function succesFunction(data) {
         console.log(procentajeFinal);
     }
     btnCalcular.addEventListener('click', calcularSimilitud);
-
-    body.appendChild(table);
 }
 
 
